@@ -35,7 +35,7 @@ def get_value(request):
             long = float(location_rec[0].longitude)
        # print lat,long
         dict={"constituency":const,"constituency-code":const_code,"Leading-Candidate":lead_cand,"Leading-Party":lead_party,"Trailing-Candidate":trial_cand,"Trailing_Party":trail_part,"Margin":marg,"Status":status,"State":state,"State-Code":state_c,"Latitude":lat,"Longitude":long}
-        print dict
+
         list.append(dict)
     return HttpResponse(json.dumps(list), content_type="application/json")
 def get_location(request):
