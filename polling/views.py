@@ -2,9 +2,7 @@
 from __future__ import unicode_literals
 from .models import PollTable,Location
 import json
-import requests
-from django.shortcuts import render
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse
 def index(request):
     return HttpResponse("""<html>
     <head><title>polling api</title></head>
@@ -12,6 +10,8 @@ def index(request):
     </html>""")
 def get_value(request):
     key=request.GET.get('state','')
+
+    print key
     record=PollTable.objects.filter(state=key)
     list=[]
     for each_rec in record:
@@ -25,6 +25,8 @@ def get_value(request):
         status=each_rec.status
         state=each_rec.state
         state_c=each_rec.state_code
+        #print const,const_code,lead_party,lead_cand,trail_part,trial_cand,marg,status,state
+
         try:
             location_rec = Location.objects.get(constituency=const)
             lat = float(location_rec.latitude)
@@ -33,7 +35,9 @@ def get_value(request):
             location_rec = Location.objects.filter(constituency=const)
             lat = float(location_rec[0].latitude)
             long = float(location_rec[0].longitude)
+       # print lat,long
         dict={"constituency":const,"constituency-code":const_code,"Leading-Candidate":lead_cand,"Leading-Party":lead_party,"Trailing-Candidate":trial_cand,"Trailing_Party":trail_part,"Margin":marg,"Status":status,"State":state,"State-Code":state_c,"Latitude":lat,"Longitude":long}
+        print dict
         list.append(dict)
     return HttpResponse(json.dumps(list), content_type="application/json")
 def get_location(request):
