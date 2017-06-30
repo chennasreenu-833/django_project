@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from .models import PollTable
+from .models import PollTable,Location
 import json
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
-
+def index(request):
+    return HttpResponse("""<html>
+    <head><title>polling api</title></head>
+    <h1><center>Welcome To Polling API</center></h1>
+    </html>""")
 def get_value(request):
     key=request.GET.get('state','')
     record=PollTable.objects.filter(state=key)
@@ -20,8 +24,23 @@ def get_value(request):
         status=each_rec.status
         state=each_rec.state
         state_c=each_rec.state_code
-        dict={"constitueny":const,"constituency-code":const_code,"Leading-Candidate":lead_cand,"Leading-Party":lead_party,"Trailing-Candidate":trial_cand,"Trailing_Party":trail_part,"Margin":marg,"Status":status,"State":state,"State-Code":state_c}
+        dict={"constituency":const,"constituency-code":const_code,"Leading-Candidate":lead_cand,"Leading-Party":lead_party,"Trailing-Candidate":trial_cand,"Trailing_Party":trail_part,"Margin":marg,"Status":status,"State":state,"State-Code":state_c}
         list.append(dict)
     return HttpResponse(json.dumps(list), content_type="application/json")
+def get_location(request):
+    key=request.GET.get('constituency','')
+    try:
+        record=Location.objects.get(constituency=key)
+        lat = float(record.latitude)
+        long = float(record.longitude)
+    except:
+        record = Location.objects.filter(constituency=key)
+        lat = float(record[0].latitude)
+        long = float(record[0].longitude)
+    list=[]
+    dict={"constituency":key,"latitude":lat,"longitude":long}
+    list.append(dict)
+    return HttpResponse(json.dumps(list),content_type="application/json")
+
 
 # Create your views here.

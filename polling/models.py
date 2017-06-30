@@ -26,5 +26,9 @@ class PollTable(models.Model):
     status = models.CharField(max_length=200)
     state = models.CharField(max_length=200)
     state_code = models.CharField(max_length=100)
+class Location(models.Model):
+    constituency=models.CharField(max_length=200)
+    latitude=models.DecimalField(max_digits=30, decimal_places=15)
+    longitude=models.DecimalField(max_digits=30, decimal_places=15)
 
 # Create your models here.
