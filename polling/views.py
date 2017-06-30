@@ -10,8 +10,6 @@ def index(request):
     </html>""")
 def get_value(request):
     key=request.GET.get('state','')
-
-    print key
     record=PollTable.objects.filter(state=key)
     list=[]
     for each_rec in record:
