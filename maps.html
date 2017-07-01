@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+    #parent{
+
+      width: 100%;
+      height: 100%;
+      float: left;
+    }
+    #child_1{
+      float: left;
+      height: 100%;
+      width: 50%;
+    }
+    #child_2{
+      float: left;
+      height: 100%;
+      width: 50%;
+    }
+       #map {
+        height:600px;
+        width: 100%;
+        float: left;
+       }
+       #dash{
+        width: 100%;
+        height: 600px;
+       float: left;
+        background-color: grey;
+       }
+    </style>
+  </head>
+  <body>
+  <div id="parent">
+    <div id="child_1">
+      <div id="map"></div>
+    </div>
+    <div id="child_2">
+      <div id="dash"> <H1></H1></div>
+    </div>
+    
+  </div>
+
+<script>
+      var map=null;
+      function makeRequest(){
+			var ourRequest=new XMLHttpRequest();
+			ourRequest.open('GET','https://pollingappdjango.herokuapp.com/state?state=Andhra%20Pradesh');
+			ourRequest.onload=function() {
+			var responseData=JSON.parse(ourRequest.responseText);
+        for(i=0;i<responseData.length;i++){
+        	var lat=responseData[i].Latitude;
+        	var lng=responseData[i].Longitude;
+        	console.log(responseData[i]);
+        	addMarker(lat,lng);
+        }
+      }
+      ourRequest.send();
+  }
+      function init() {
+		map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 5,
+				center: new google.maps.LatLng(25.92, 79.25),
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+			makeRequest();
+      }
+      function addMarker(lat,lng){
+		  
+			marker = new google.maps.Marker({
+				position: new google.maps.LatLng(lat,lng),
+				map: map
+			});
+		  
+		}
+</script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6_Bgn3QQmdH_uQBKbc_GXsMzObAW9ov4&callback=init">
+</script>
+  </body>
+</html>

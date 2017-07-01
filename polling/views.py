@@ -52,6 +52,13 @@ def get_location(request):
     dict={"constituency":key,"latitude":lat,"longitude":long}
     list.append(dict)
     return HttpResponse(json.dumps(list),content_type="application/json")
+def get_html(request):
+    foo=open("maps.html","r+")
+    file_date=foo.read()
+    foo.close()
+    return HttpResponse(file_date,content_type="text/html")
+
+
 
 
 # Create your views here.
