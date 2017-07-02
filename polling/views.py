@@ -57,7 +57,21 @@ def get_html(request):
     file_date=foo.read()
     foo.close()
     return HttpResponse(file_date,content_type="text/html")
-
+def get_bjp(request):
+    foo=open("bjp.png","r+")
+    file_data=foo.read()
+    foo.close()
+    return HttpResponse(file_data,content_type="image/png")
+def get_tdp(request):
+    foo=open("tdp.png","r+")
+    file_data=foo.read()
+    foo.close()
+    return HttpResponse(file_data,content_type="image/png")
+def get_cong(request):
+    foo=open("cong.png","r+")
+    file_data=foo.read()
+    foo.close()
+    return HttpResponse(file_data,content_type="image/png")
 
 
 
