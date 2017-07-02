@@ -11,12 +11,12 @@
     #child_1{
       float: left;
       height: 100%;
-      width: 50%;
+      width: 70%;
     }
     #child_2{
       float: left;
       height: 100%;
-      width: 50%;
+      width: 30%;
     }
        #map {
         height:650px;
@@ -39,27 +39,52 @@
     <div id="child_2">
       <div id="dash"> 
 
+      <h2 style="color: white;"><center>Select State to Mark Constituencies on Map And Click on the marker to get details</center></h2>
 
 
 
 
 
-      <button id="btn" onclick="buttonClick()"> Click Here</button>
 
+      
 
-      <select id= "state" onChange="makeRequest(this)" style="width: 140px;">
-							<option value="0">--Select--</option>
-							
-
+      <select id= "state" onChange="makeRequest(this)" style="width: 50%;height:5%;margin-left: 25%;margin-top: 2%">
+							<option value="0">--Select State--</option>
+							<option value="s1">Andaman Nicobar Islands</option>
 							<option value="s2">Andhra Pradesh</option>
-							<option value="cbse">Bihar</option>
-							<option value="s3">Manipur</option>
-							<option value="s4">Maharashtra</option>
-							
-							<option value="icse">Uttar Pradesh</option>
-							<option value="O">Tamil Nadu</option>
-							<option value="OS">Karnataka</option>
-							<option value="OSS">Manipur</option>
+							<option value="s3">Arunachal Pradesh</option>
+							<option value="s4">Assam</option>
+							<option value="s5">Bihar</option>
+							<option value="s6">Chandigarh</option>
+							<option value="s7">Dadra Nagar Haveli</option>
+							<option value="s8">Daman Diu</option>
+							<option value="s9">Goa</option>
+							<option value="s10">Gujarat</option>
+							<option value="s11">Haryana</option>
+							<option value="s12">Himachal Pradesh</option>
+							<option value="s13">Jammu Kashmir</option>
+							<option value="s14">Jharkhand</option>
+							<option value="s15">Karnataka</option>
+							<option value="s16">Kerala</option>
+							<option value="s17">Lakshadweep</option>
+							<option value="s18">Madhya Pradesh</option>
+							<option value="s19">Maharashtra</option>
+							<option value="s20">Manipur</option>
+							<option value="s21">Meghalaya</option>
+							<option value="s22">Mizoram</option>
+							<option value="s23">NCT OF Delhi</option>
+							<option value="s24">Nagaland</option>
+							<option value="s25">Odisha</option>
+							<option value="s26">Puducherry</option>
+							<option value="s27">Punjab</option>
+							<option value="s28">Rajasthan</option>
+							<option value="s29">Sikkim</option>
+							<option value="s30">Tamil Nadu</option>
+							<option value="s31">Tripura</option>
+							<option value="s32">Uttar Pradesh</option>
+							<option value="s33">Uttarakhand</option>
+							<option value="s34">West Bengal</option>
+
 					</select>
 					</div>
     </div>
@@ -80,7 +105,7 @@
       	}
 			var ourRequest=new XMLHttpRequest();
 			var state_name=select.options[select.selectedIndex].text;
-			var url='https://pollingappdjango.herokuapp.com/state?state='+state_name;
+			var url='http://localhost:8000/state?state='+state_name;
 			ourRequest.open('GET',url);
 			ourRequest.onload=function() {
 			var responseData=JSON.parse(ourRequest.responseText);
@@ -104,27 +129,28 @@
         		'<p>Constituency Code: '+consti_code+'</br>Leading Candidate: '+lead_cand+'</br>Leading Party: '+lead_party+'</br>Trailing Candidate: '+trail_cand+'</br>Trailing Party: '+trail_party+'</br>Margin :'+margin+'</br>Status :'+status+'</br>State: '+state+'</br>State Code: '+state_code+'</p>'
         		'</div>'
         		'</div>'
-        	addMarker(lat,lng,contentString);
+        	addMarker(lat,lng,contentString,consti);
         }
       }
       ourRequest.send();
   }
       function init() {
 		map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 7,
-				center: new google.maps.LatLng(15.9129, 79.74),
+				zoom: 5,
+				center: new google.maps.LatLng(20.5937, 78.9629),
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			});
 			
       }
-      function addMarker(lat,lng,content){
+      function addMarker(lat,lng,content,title){
       	var infowindow = new google.maps.InfoWindow({
    			 content: content
   		});
 		  
 		var marker = new google.maps.Marker({
 				position: new google.maps.LatLng(lat,lng),
-				map: map
+				map: map,
+				title:title
 			});
 		marker.addListener('click',function(){
 			infowindow.open(map,marker);
