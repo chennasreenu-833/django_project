@@ -156,9 +156,9 @@
 				position: new google.maps.LatLng(lat,lng),
 				map: map,
 				icon:image,
+				scaledSize: new google.maps.Size(42, 68),
 				animation: google.maps.Animation.DROP,
 				title:title,
-				size:null,
 			});
 		marker.addListener('click',function(){
 			for(i=0;i<infowindows.length;i++){
