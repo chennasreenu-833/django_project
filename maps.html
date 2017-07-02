@@ -19,13 +19,13 @@
       width: 50%;
     }
        #map {
-        height:600px;
+        height:650px;
         width: 100%;
-        float: left;
+        display: inline-block;
        }
        #dash{
         width: 100%;
-        height: 600px;
+        height: 650px;
        float: left;
         background-color: grey;
        }
@@ -37,41 +37,66 @@
       <div id="map"></div>
     </div>
     <div id="child_2">
-      <div id="dash"> <H1></H1></div>
+      <div id="dash"> <button id="btn" onclick="buttonClick()"> Click Here</button></div>
     </div>
     
   </div>
 
 <script>
       var map=null;
+      function buttonClick(){
+      		makeRequest();
+      }
       function makeRequest(){
 			var ourRequest=new XMLHttpRequest();
 			ourRequest.open('GET','https://pollingappdjango.herokuapp.com/state?state=Andhra%20Pradesh');
 			ourRequest.onload=function() {
 			var responseData=JSON.parse(ourRequest.responseText);
         for(i=0;i<responseData.length;i++){
+        	var consti=responseData[i].constituency;
+        	var consti_code=responseData[i].constituency_code;
+        	var lead_cand=responseData[i].Leading_Candidate;
+        	var lead_party=responseData[i].Leading_Party;
+        	var trail_cand=responseData[i].Trailing_Candidate;
+        	var trail_party=responseData[i].Trailing_Party;
+        	var margin=responseData[i].Margin;
+        	var status=responseData[i].Status;
+        	var state=responseData[i].State;
+        	var state_code=responseData[i].State_Code;
         	var lat=responseData[i].Latitude;
         	var lng=responseData[i].Longitude;
-        	console.log(responseData[i]);
-        	addMarker(lat,lng);
+        	var contentString='<div id="content">'+
+        		'<div id="siteNotice">'+
+        		'</div>'+
+        		'<h1 id="firstHeading" class="firstHeading">'+consti+'</h1><div id="bodyContent">'+
+        		'<p>Constituency Code: '+consti_code+'</br>Leading Candidate: '+lead_cand+'</br>Leading Party: '+lead_party+'</br>Trailing Candidate: '+trail_cand+'</br>Trailing Party: '+trail_party+'</br>Margin :'+margin+'</br>Status :'+status+'</br>State: '+state+'</br>State Code: '+state_code+'</p>'
+        		'</div>'
+        		'</div>'
+        	addMarker(lat,lng,contentString);
         }
       }
       ourRequest.send();
   }
       function init() {
 		map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 5,
-				center: new google.maps.LatLng(25.92, 79.25),
+				zoom: 7,
+				center: new google.maps.LatLng(15.9129, 79.74),
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			});
-			makeRequest();
+			
       }
-      function addMarker(lat,lng){
+      function addMarker(lat,lng,content){
+      	var infowindow = new google.maps.InfoWindow({
+   			 content: content
+  		});
 		  
-			marker = new google.maps.Marker({
+		var	marker = new google.maps.Marker({
 				position: new google.maps.LatLng(lat,lng),
 				map: map
 			});
+		marker.addListener('click',function(){
+			infowindow.open(map,marker);
+		});
 		  
 		}
 </script>
