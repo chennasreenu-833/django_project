@@ -80,7 +80,7 @@
       	}
 			var ourRequest=new XMLHttpRequest();
 			var state_name=select.options[select.selectedIndex].text;
-			var url='http://localhost:8000/state?state='+state_name;
+			var url='https://pollingappdjango.herokuapp.com/state?state='+state_name;
 			ourRequest.open('GET',url);
 			ourRequest.onload=function() {
 			var responseData=JSON.parse(ourRequest.responseText);
