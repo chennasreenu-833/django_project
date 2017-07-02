@@ -34,22 +34,54 @@
   <body>
   <div id="parent">
     <div id="child_1">
-      <div id="map"></div>
+      <div id="map" ></div>
     </div>
     <div id="child_2">
-      <div id="dash"> <button id="btn" onclick="buttonClick()"> Click Here</button></div>
+      <div id="dash"> 
+
+
+
+
+
+
+      <button id="btn" onclick="buttonClick()"> Click Here</button>
+
+
+      <select id= "state" onChange="makeRequest(this)" style="width: 140px;">
+							<option value="0">--Select--</option>
+							
+
+							<option value="s2">Andhra Pradesh</option>
+							<option value="cbse">Bihar</option>
+							<option value="s3">Manipur</option>
+							<option value="s4">Maharashtra</option>
+							
+							<option value="icse">Uttar Pradesh</option>
+							<option value="O">Tamil Nadu</option>
+							<option value="OS">Karnataka</option>
+							<option value="OSS">Manipur</option>
+					</select>
+					</div>
     </div>
     
   </div>
 
 <script>
+		var markers=[];
       var map=null;
+      var state=document.getElementById("state");
       function buttonClick(){
       		makeRequest();
       }
-      function makeRequest(){
+      
+      function makeRequest(select){
+      	for(i=0;i<markers.length;i++){
+      		markers[i].setMap(null);
+      	}
 			var ourRequest=new XMLHttpRequest();
-			ourRequest.open('GET','https://pollingappdjango.herokuapp.com/state?state=Andhra%20Pradesh');
+			var state_name=select.options[select.selectedIndex].text;
+			var url='http://localhost:8000/state?state='+state_name;
+			ourRequest.open('GET',url);
 			ourRequest.onload=function() {
 			var responseData=JSON.parse(ourRequest.responseText);
         for(i=0;i<responseData.length;i++){
@@ -90,13 +122,15 @@
    			 content: content
   		});
 		  
-		var	marker = new google.maps.Marker({
+		var marker = new google.maps.Marker({
 				position: new google.maps.LatLng(lat,lng),
 				map: map
 			});
 		marker.addListener('click',function(){
 			infowindow.open(map,marker);
 		});
+		markers.push(marker);
+		
 		  
 		}
 </script>
