@@ -38,6 +38,28 @@ def get_value(request):
 
         list.append(dict)
     return HttpResponse(json.dumps(list), content_type="application/json")
+
+def get_leadparty(request):
+    key=request.GET.get('leadparty','');
+    records=PollTable.objects.filter(leading_party=key)
+    list=[]
+    for each_rec in records:
+        consti=each_rec.constituency
+        consti_code=each_rec.constituency_code
+        lead_cand=each_rec.leading_candidate
+        margin=each_rec.margin
+        try:
+            location_rec = Location.objects.get(constituency=consti)
+            lat = float(location_rec.latitude)
+            long = float(location_rec.longitude)
+        except:
+            location_rec = Location.objects.filter(constituency=consti)
+            lat = float(location_rec[0].latitude)
+            long = float(location_rec[0].longitude)
+        dict={"constituency":consti,"constituency_code":consti_code,"Leading_Candidate":lead_cand,"Margin":margin,"Latitude":lat,"Longitude":long}
+        list.append(dict)
+    return HttpResponse(json.dumps(list),content_type="application/json")
+
 def get_location(request):
     key=request.GET.get('constituency','')
     try:
@@ -72,7 +94,6 @@ def get_cong(request):
     file_data=foo.read()
     foo.close()
     return HttpResponse(file_data,content_type="image/png")
-
 
 
 # Create your views here.

@@ -17,7 +17,7 @@
       width: 100%;
     }
        #map {
-        height:650px;
+        height:608px;
         width: 100%;
         display: inline-block;
        }
@@ -26,7 +26,7 @@
         height: 25px;
         
        float: left;
-        background-color: blue;
+        background-color: #009270;
        }
     </style>
   </head>
@@ -36,8 +36,8 @@
     <div id="child_2">
       <div id="dash"> 
 
-      <select id= "state" onChange="makeRequest(this)" style="width: 15%;height:25px;margin-left: 1%;">
-							<option value="0">--State--</option>
+      <select id= "state" onChange="makeRequestForState(this)" style="width: 15%;height:25px;margin-left: 2%;">
+							<option value="0">State</option>
 							<option value="s1">Andaman Nicobar Islands</option>
 							<option value="s2">Andhra Pradesh</option>
 							<option value="s3">Arunachal Pradesh</option>
@@ -74,6 +74,47 @@
 							<option value="s34">West Bengal</option>
 
 					</select>
+			<select id="party" onChange="makeRequestForLead(this)" style="width: 15%;height:25px;margin-left: 2%;">
+			<option value="p0">Leading Party</option>
+			<option value="p1">Aam Aadmi Party</option>
+			<option value="p2">All India Anna Dravida Munnetra Kazhagam</option>
+			<option value="p3">All India Majlis-E-Ittehadul Muslimeen</option>
+			<option value="p4">All India N.R. Congress</option>
+			<option value="p5">All India Trinamool Congress</option>
+			<option value="p6">All India United Democratic Front</option>
+			<option value="p7">Apna Dal</option>
+			<option value="p8">Bharatiya Janata Party</option>
+			<option value="p9">Biju Janata Dal</option>
+			<option value="p10">Communist Party of India</option>
+			<option value="p11">Communist Party of India  (Marxist)</option>
+			<option value="p12">Independent</option>
+			<option value="p13">Indian National Congress</option>
+			<option value="p14">Indian National Lok Dal</option>
+			<option value="p15">Indian Union Muslim League</option>
+			<option value="p16">Jammu & Kashmir Peoples Democratic Party</option>
+			<option value="p17">Janata Dal  (Secular)</option>
+			<option value="p18">Janata Dal  (United)</option>
+			<option value="p19">Jharkhand Mukti Morcha</option>
+			<option value="p20">Kerala Congress  (M)</option>
+			<option value="p21">Lok Jan Shakti Party</option>
+			<option value="p22">Naga Peoples Front</option>
+			<option value="p23">National Peoples Party</option>
+			<option value="p24">Nationalist Congress Party</option>
+			<option value="p25">Pattali Makkal Katchi</option>
+			<option value="p26">Rashtriya Janata Dal</option>
+			<option value="p27">Rashtriya Lok Samta Party</option>
+			<option value="p28">Revolutionary Socialist Party</option>
+			<option value="p29">Samajwadi Party</option>
+			<option value="p30">Shiromani Akali Dal</option>
+			<option value="p31">Shivsena</option>
+			<option value="p32">Sikkim Democratic Front</option>
+			<option value="p33">Swabhimani Paksha</option>
+			<option value="p34">Telangana Rashtra Samithi</option>
+			<option value="p35">Telugu Desam</option>
+			<option value="p36">Yuvajana Sramika Rythu Congress Party</option>
+			
+			
+			</select>
 					</div>
     </div>
      <div id="child_1">
@@ -87,11 +128,40 @@
 		var infowindows=[];
       var map=null;
       var state=document.getElementById("state");
-      function buttonClick(){
-      		makeRequest();
+      function makeRequestForLead(select){
+      		for(i=0;i<markers.length;i++){
+      			markers[i].setMap(null);
+      		}
+      		var ourRequest=new XMLHttpRequest();
+			var party_name=select.options[select.selectedIndex].text;
+			var url='https://pollingappdjango.herokuapp.com/leadparty?leadparty='+party_name;
+			ourRequest.open('GET',url);
+			ourRequest.onload=function(){
+				var responseData=JSON.parse(ourRequest.responseText);
+				for(i=0;i<responseData.length;i++){
+					var constituency=responseData[i].constituency;
+					var constituency_code=responseData[i].constituency_code;
+					var leading_Candidate=responseData[i].Leading_Candidate;
+					var margin=responseData[i].Margin;
+					var latitude=responseData[i].Latitude;
+					var longitude=responseData[i].Longitude;
+					var contentString='<div id="content">'+
+        		'<div id="siteNotice">'+
+        		'</div>'+
+        		'<h1 id="firstHeading" class="firstHeading">'+constituency+'</h1><div id="bodyContent">'+
+        		'<p>Constituency Code: '+constituency_code+'</br>Leading Candidate: '+leading_Candidate+'</br>Margin :'+margin+'</br></p>'
+        		'</div>'
+        		'</div>'
+        		addMarker(latitude,longitude,contentString,constituency,party_name);
+			}
+
       }
+      ourRequest.send();
+  }
+
+
       
-      function makeRequest(select){
+      function makeRequestForState(select){
       	for(i=0;i<markers.length;i++){
       		markers[i].setMap(null);
       	}
@@ -101,27 +171,27 @@
 			ourRequest.open('GET',url);
 			ourRequest.onload=function() {
 			var responseData=JSON.parse(ourRequest.responseText);
-        for(i=0;i<responseData.length;i++){
-        	var consti=responseData[i].constituency;
-        	var consti_code=responseData[i].constituency_code;
-        	var lead_cand=responseData[i].Leading_Candidate;
-        	var lead_party=responseData[i].Leading_Party;
-        	var trail_cand=responseData[i].Trailing_Candidate;
-        	var trail_party=responseData[i].Trailing_Party;
-        	var margin=responseData[i].Margin;
-        	var status=responseData[i].Status;
-        	var state=responseData[i].State;
-        	var state_code=responseData[i].State_Code;
-        	var lat=responseData[i].Latitude;
-        	var lng=responseData[i].Longitude;
-        	var contentString='<div id="content">'+
+        	for(i=0;i<responseData.length;i++){
+        		var consti=responseData[i].constituency;
+        		var consti_code=responseData[i].constituency_code;
+        		var lead_cand=responseData[i].Leading_Candidate;
+        		var lead_party=responseData[i].Leading_Party;
+        		var trail_cand=responseData[i].Trailing_Candidate;
+        		var trail_party=responseData[i].Trailing_Party;
+        		var margin=responseData[i].Margin;
+        		var status=responseData[i].Status;
+        		var state=responseData[i].State;
+        		var state_code=responseData[i].State_Code;
+        		var lat=responseData[i].Latitude;
+        		var lng=responseData[i].Longitude;
+        		var contentString='<div id="content">'+
         		'<div id="siteNotice">'+
         		'</div>'+
         		'<h1 id="firstHeading" class="firstHeading">'+consti+'</h1><div id="bodyContent">'+
         		'<p>Constituency Code: '+consti_code+'</br>Leading Candidate: '+lead_cand+'</br>Leading Party: '+lead_party+'</br>Trailing Candidate: '+trail_cand+'</br>Trailing Party: '+trail_party+'</br>Margin :'+margin+'</br>Status :'+status+'</br>State: '+state+'</br>State Code: '+state_code+'</p>'
         		'</div>'
         		'</div>'
-        	addMarker(lat,lng,contentString,consti,lead_party);
+        		addMarker(lat,lng,contentString,consti,lead_party);
         }
       }
       ourRequest.send();
@@ -170,7 +240,6 @@
 		});
 		markers.push(marker);
 		infowindows.push(infowindow);
-		
 		  
 		}
 </script>

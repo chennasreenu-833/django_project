@@ -6,6 +6,7 @@ urlpatterns=[
     url(r'^location$',views.get_location,name="get_location"),
     url(r'^html$',views.get_html,name="gethtml"),
     url(r'^$',views.index,name="index"),
+    url(r'^leadparty',views.get_leadparty,name="leadparty"),
     url(r'^bjp$',views.get_bjp,name="bjp"),
     url(r'^tdp$',views.get_tdp,name="tdp"),
     url(r'^cng$',views.get_cong,name="cng"),
