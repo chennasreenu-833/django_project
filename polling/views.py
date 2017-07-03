@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from .models import PollTable,Location
+from .models import PollTable,Location,LoginDetails
+
+
 import json
 from django.http import HttpResponse
 def index(request):
@@ -8,6 +10,16 @@ def index(request):
     <head><title>polling api</title></head>
     <h1><center>Welcome To Polling API</center></h1>
     </html>""")
+
+
+def addData(request):
+    username=request.POST.get('username','')
+    password=request.POST.get('password','')
+    record=LoginDetails.objects.filter(username=username)
+    if(record[0].password==password):
+        return HttpResponse("TRUE")
+    else:
+        return HttpResponse("FALSE")
 def get_value(request):
     key=request.GET.get('state','')
     record=PollTable.objects.filter(state=key)
@@ -117,6 +129,11 @@ def get_list_trailparty(request):
     return HttpResponse(json.dumps(list),content_type="application/json")
 def get_html(request):
     foo=open("maps.html","r+")
+    file_date=foo.read()
+    foo.close()
+    return HttpResponse(file_date,content_type="text/html")
+def get_login(request):
+    foo=open("login.html","r+")
     file_date=foo.read()
     foo.close()
     return HttpResponse(file_date,content_type="text/html")

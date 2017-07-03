@@ -30,5 +30,7 @@ class Location(models.Model):
     constituency=models.CharField(max_length=200)
     latitude=models.DecimalField(max_digits=30, decimal_places=15)
     longitude=models.DecimalField(max_digits=30, decimal_places=15)
-
+class LoginDetails(models.Model):
+    username=models.CharField(max_length=25)
+    password=models.CharField(max_length=25)
 # Create your models here.
