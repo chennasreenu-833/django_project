@@ -60,6 +60,27 @@ def get_leadparty(request):
         list.append(dict)
     return HttpResponse(json.dumps(list),content_type="application/json")
 
+def get_trialparty(request):
+    key=request.GET.get('trailparty','');
+    records=PollTable.objects.filter(trailing_party=key)
+    list=[]
+    for each_rec in records:
+        consti=each_rec.constituency
+        consti_code=each_rec.constituency_code
+        trail_cand=each_rec.trailing_candidate
+        margin=each_rec.margin
+        try:
+            location_rec = Location.objects.get(constituency=consti)
+            lat = float(location_rec.latitude)
+            long = float(location_rec.longitude)
+        except:
+            location_rec = Location.objects.filter(constituency=consti)
+            lat = float(location_rec[0].latitude)
+            long = float(location_rec[0].longitude)
+        dict={"constituency":consti,"constituency_code":consti_code,"Trailing_Candidate":trail_cand,"Margin":margin,"Latitude":lat,"Longitude":long}
+        list.append(dict)
+    return HttpResponse(json.dumps(list),content_type="application/json")
+
 def get_location(request):
     key=request.GET.get('constituency','')
     try:
@@ -73,6 +94,26 @@ def get_location(request):
     list=[]
     dict={"constituency":key,"latitude":lat,"longitude":long}
     list.append(dict)
+    return HttpResponse(json.dumps(list),content_type="application/json")
+
+def get_list_state(request):
+    records=PollTable.objects.values('state').distinct()
+    list=[]
+    for each_rec in records:
+        list.append(each_rec);
+    return HttpResponse(json.dumps(list),content_type="application/json")
+
+def get_list_leadparty(request):
+    records=PollTable.objects.values('leading_party').distinct()
+    list=[]
+    for each_rec in records:
+        list.append(each_rec);
+    return HttpResponse(json.dumps(list),content_type="application/json")
+def get_list_trailparty(request):
+    records=PollTable.objects.values('trailing_party').distinct()
+    list=[]
+    for each_rec in records:
+        list.append(each_rec);
     return HttpResponse(json.dumps(list),content_type="application/json")
 def get_html(request):
     foo=open("maps.html","r+")
