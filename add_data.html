@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data Entry</title>
+</head>
+<body>
+<div style="height: 100%;width: 100%">
+<h1><center>Please Fill in the Details</center></h1>
+<h3 id="error"><center></center>
+<div style="margin-top: 5%;margin-left: 10%;">
+	<strong>Constituency:</strong><input id="constituency" type="text" name="constituency" " /><br>
+	<strong>Constituency Code:</strong><input id="constituency_code" type="text" name="constituency_code" style="margin-top: 1% "/><br>
+	<strong>Leading Candidate:</strong><input id="leading_candidate" type="text" name="leading_candidate" style="margin-top: 1%"/><br>
+	<strong>Leading Party:</strong><input id="leading_party" type="text" name="leading_party" style="margin-top: 1%"/><br>
+	<strong>Trailing Candidate:</strong><input id="trailing_candidate" type="text" name="trailing_candidate" style="margin-top: 1%"/><br>
+	<strong>Trailing Party:</strong><input id="trailing_party" type="text" name="trailing_party" style="margin-top: 1%"/><br>
+	<strong>Margin:</strong><input id="margin" type="text" name="margin" style="margin-top: 1%"/><br>
+	<strong>State:</strong><input id="state" type="text" name="state" style="margin-top: 1%"/><br>
+	<strong>State Code:</strong><input id="state_code" type="text" name="state_code" style="margin-top: 1%"/><br>
+	<button id="add_details" onclick="addDetails()" style="margin-top:2%;margin-left: 7%"><b>Save</b></button>
+</div>
+	
+</div>
+<script type="text/javascript">
+	function addDetails(){
+		var constituency=document.getElementById("constituency").value;
+		var constituency_code=document.getElementById("constituency_code").value;
+		var leading_candidate=document.getElementById("leading_candidate").value;
+		var leading_party=document.getElementById("leading_party").value;
+		var trailing_candidate=document.getElementById("trailing_candidate").value;
+		var trailing_party=document.getElementById("trailing_party").value;
+		var margin=document.getElementById("margin").value;
+		var state=document.getElementById("state").value;
+		var state_code=document.getElementById("state_code").value;
+		if(constituency.length>0&&constituency_code.length>0&&leading_candidate.length>0&&leading_party.length>0&&
+			trailing_candidate.length>0&&trailing_party.length>0&&margin.length>0&&state.length>0&&state_code.length>0){
+			var xhttp_locationRequest=new XMLHttpRequest();
+			var url="https://maps.googleapis.com/maps/api/geocode/json?address="+constituency;
+			xhttp_locationRequest.open("GET",url,true);
+			xhttp_locationRequest.onreadystatechange=function(){
+			if(this.readyState==4 && this.status==200){
+				var xhttp_locationResponseData=JSON.parse(xhttp_locationRequest.responseText);
+				if(xhttp_locationResponseData==null){
+					window.alert("Please Enter Correct Constituency!! Unable to find Location");
+				}
+				else{
+					var res_data=json_data["results"];
+        			var rand=res_data[0];
+        			var geo_data=rand["geometry"];
+        			var loc_data=geo_data["location"];
+        			var lat=null;
+        			var lng=null;
+        			lat=loc_data["lat"];
+        			lng=loc_data["lng"];
+        			if(lat!=null&&lng!=null){
+        				var xhttp_saveRequest=new XMLHttpRequest();
+        				var url_save="https://pollingappdjango.herokuapp.com/save";
+        				var params='constituency='+constituency+'&constituency_code='+constituency_code+'&leading_party='+leading_party+'&leading_candidate='+leading_candidate+'&trailing_candidate='+trailing_candidate+'&trailing_party='+trailing_party+'&margin='+margin+'&state='+state+'&state_code='+state_code+'&latitude='+lat+'&longitude='+lng;
+        				xhttp_saveRequest.open("POST",url_save,true);
+        				xhttp_saveRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        				xhttp_saveRequest.onreadystatechange=function(){
+        					if(this.readyState==4%% this.status==200){
+        						if(xhttp_saveRequest.responseText=='SUCCESS'){
+        							window.alert("Details saved successfully");
+        						}
+        						else{
+        							window.alert("Failed to save Details");
+        						}
+        					}
+        				}
+        				xhttp_saveRequest.send(params);
+        			}
+        			else{
+        				window.alert("Please Enter Correct Constituency!! Unable to find Location");
+        			}
+				}
+				
+			}
+		};
+  		xhttp_locationRequest.send();
+		}else{
+			document.getElementById("error").innerHTML="Fill in all Details. Don't leave blank";
+		}
+	}
+
+
+
+
+</script>
+
+</body>
+</html>
