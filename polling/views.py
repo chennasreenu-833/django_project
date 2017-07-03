@@ -11,23 +11,25 @@ def index(request):
     <h1><center>Welcome To Polling API</center></h1>
     </html>""")
 def saveData(request):
-    constituency=request.POST.get('constituency','')
-    constituency_code=request.POST.get('constituency_code','')
-    leading_party=request.POST.get('leading_party','')
-    leading_candidate=request.POST.get('leading_candidate','')
-    trailing_candidate=request.POST.get('trailing_candidate','')
-    trailing_party=request.POST.get('trailing_party','')
-    margin=request.POST.get('margin','')
-    state=request.POST.get('state','')
-    state_code=request.POST.get('state_code','')
-    latitude=request.POST.get('latitude','')
-    longitude=request.POST.get('longitude','')
-    status="Results Declared"
-    polling_rec=PollTable(constituency=constituency,constituency_code=constituency_code,leading_candidate=leading_candidate,leading_party=leading_party,trailing_candidate=trailing_candidate,trailing_party=trailing_party,margin=margin,status=status,state=state,state_code=state_code)
-    location_rec=Location(constituency=constituency,latitude=latitude,longitude=longitude)
-    if(polling_rec.save()&location_rec.save()):
+    try:
+        constituency=request.POST.get('constituency','')
+        constituency_code=request.POST.get('constituency_code','')
+        leading_party=request.POST.get('leading_party','')
+        leading_candidate=request.POST.get('leading_candidate','')
+        trailing_candidate=request.POST.get('trailing_candidate','')
+        trailing_party=request.POST.get('trailing_party','')
+        margin=int(request.POST.get('margin',''))
+        state=request.POST.get('state','')
+        state_code=request.POST.get('state_code','')
+        latitude=request.POST.get('latitude','')
+        longitude=request.POST.get('longitude','')
+        status="Results Declared"
+        polling_rec=PollTable(constituency=constituency,constituency_code=constituency_code,leading_candidate=leading_candidate,leading_party=leading_party,trailing_candidate=trailing_candidate,trailing_party=trailing_party,margin=margin,status=status,state=state,state_code=state_code)
+        location_rec=Location(constituency=constituency,latitude=latitude,longitude=longitude)
+        polling_rec.save()
+        location_rec.save()
         return HttpResponse("SUCCESS")
-    else:
+    except:
         return HttpResponse("FAILED")
 
 def addData(request):

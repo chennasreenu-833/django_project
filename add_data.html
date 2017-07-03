@@ -9,7 +9,7 @@
 <h3 id="error"><center></center>
 <div style="margin-top: 5%;margin-left: 10%;">
 	<strong>Constituency:</strong><input id="constituency" type="text" name="constituency" " /><br>
-	<strong>Constituency Code:</strong><input id="constituency_code" type="text" name="constituency_code" style="margin-top: 1% "/><br>
+	<strong>Constituency Code:(Numbers)</strong><input id="constituency_code" type="text" name="constituency_code" style="margin-top: 1% "/><br>
 	<strong>Leading Candidate:</strong><input id="leading_candidate" type="text" name="leading_candidate" style="margin-top: 1%"/><br>
 	<strong>Leading Party:</strong><input id="leading_party" type="text" name="leading_party" style="margin-top: 1%"/><br>
 	<strong>Trailing Candidate:</strong><input id="trailing_candidate" type="text" name="trailing_candidate" style="margin-top: 1%"/><br>
@@ -17,7 +17,7 @@
 	<strong>Margin:</strong><input id="margin" type="text" name="margin" style="margin-top: 1%"/><br>
 	<strong>State:</strong><input id="state" type="text" name="state" style="margin-top: 1%"/><br>
 	<strong>State Code:</strong><input id="state_code" type="text" name="state_code" style="margin-top: 1%"/><br>
-	<button id="add_details" onclick="addDetails()" style="margin-top:2%;margin-left: 7%;">Save</button>
+	<button id="add" onclick="addDetails()" style="margin-top:2%;margin-left: 7%;">Save</button>
 </div>
 	
 </div>
@@ -44,7 +44,7 @@
 					window.alert("Please Enter Correct Constituency!! Unable to find Location");
 				}
 				else{
-					var res_data=json_data["results"];
+					var res_data=xhttp_locationResponseData["results"];
         			var rand=res_data[0];
         			var geo_data=rand["geometry"];
         			var loc_data=geo_data["location"];
@@ -52,6 +52,8 @@
         			var lng=null;
         			lat=loc_data["lat"];
         			lng=loc_data["lng"];
+        			console.log(lat);
+        			console.log(lng);
         			if(lat!=null&&lng!=null){
         				var xhttp_saveRequest=new XMLHttpRequest();
         				var url_save="https://pollingappdjango.herokuapp.com/save";
@@ -59,7 +61,7 @@
         				xhttp_saveRequest.open("POST",url_save,true);
         				xhttp_saveRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         				xhttp_saveRequest.onreadystatechange=function(){
-        					if(this.readyState==4%% this.status==200){
+        					if(this.readyState==4 &&this.status==200){
         						if(xhttp_saveRequest.responseText=='SUCCESS'){
         							window.alert("Details saved successfully");
         						}
@@ -79,7 +81,7 @@
 		};
   		xhttp_locationRequest.send();
 		}else{
-			document.getElementById("error").innerHTML="Fill in all Details. Don't leave blank";
+			window.alert("Fill in all Details. Don't leave blank");
 		}
 	}
 
