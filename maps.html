@@ -41,18 +41,19 @@
 
 					</select>
 			<select id="lead_party" onChange="makeRequestForLead(this)" style="width: 20%;height:25px;margin-left: 2%;">
-			<option>Party Leading Places</option>
+			<option><b>Party Leading Places</b></option>
 			
 			
 			</select>
 
 
 			<select id="trail_party" onChange="makeRequestForTrail(this)" style="width: 20%;height:25px;margin-left: 2%;">
-			<option value="tp0">Party Trailing Places</option>
+			<option value="tp0"><b>Party Trailing Places</b></option>
 			
 			
 			</select>
-			<button id="add" onclick="openLogin()" style="margin-left: 2%;width: 10%;height: 25px;">Add Data</button>
+			<button id="add" onclick="openLogin()" style="margin-left: 2%;width: 10%;height: 25px;"><b>Add Data</b></button>
+			<button id="analysis" onclick="openPie()" style="margin-left: 2%;width: 10%;height: 25px;"><b>Analysis</b></button>
 			
 			
 					</div>
@@ -64,6 +65,10 @@
   </div>
 
 <script>
+
+	function openPie(){
+		window.open("https://pollingappdjango.herokuapp.com/open_piechart");
+	}
 
 	var select_box_state=document.getElementById("state");
 	var state_request=new XMLHttpRequest();

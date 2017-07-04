@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      
+      var party_names=[];
+      var count_values=[];
+      var ourRequest=new XMLHttpRequest();
+      var url='https://pollingappdjango.herokuapp.com/pie_chart';
+      ourRequest.open('GET',url);
+      ourRequest.onload=function(){
+          var responseData=JSON.parse(ourRequest.responseText);
+          for(i=0;i<responseData.length;i++){
+            var party_name=responseData[i].leading_party;
+            var count=responseData[i].dcount;
+            party_names.push(party_name);
+            count_values.push(count);
+      }
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      }
+      ourRequest.send();
+
+
+      function drawChart(){
+          var data_array=[];
+          var header=[];
+          header.push('Party Name','No of seats');
+          data_array.push(header);
+     
+          for(i=0;i<party_names.length;i++){
+              var temp=[]
+              temp.push(party_names[i]);
+              temp.push(count_values[i]);
+              data_array.push(temp);
+          }
+          var data = google.visualization.arrayToDataTable(data_array);
+
+          var options = {
+            title: 'Result Analysis'
+          };
+
+          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+          chart.draw(data, options);
+      }
+      
+    </script>
+  </head>
+  <body>
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from .models import PollTable,Location,LoginDetails
-
+from django.db.models import Count
 
 import json
 from django.http import HttpResponse
@@ -112,6 +112,14 @@ def get_trialparty(request):
         dict={"constituency":consti,"constituency_code":consti_code,"Trailing_Candidate":trail_cand,"Margin":margin,"Latitude":lat,"Longitude":long}
         list.append(dict)
     return HttpResponse(json.dumps(list),content_type="application/json")
+def get_pie(request):
+    records=list(PollTable.objects.values('leading_party').annotate(dcount=Count('leading_party')))
+    return HttpResponse(json.dumps(records),content_type="application/json")
+def open_piechart(request):
+    foo = open("pie_chart.html", "r+")
+    file_date = foo.read()
+    foo.close()
+    return HttpResponse(file_date, content_type="text/html")
 
 def get_location(request):
     key=request.GET.get('constituency','')
